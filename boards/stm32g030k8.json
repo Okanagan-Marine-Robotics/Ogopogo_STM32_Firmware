@@ -1,0 +1,35 @@
+{
+  "build": {
+    "cpu": "cortex-m0plus",
+    "f_cpu": "64000000L",
+    "mcu": "stm32g030k8t6",
+    "variant": "STM32G0xx"
+  },
+  "frameworks": ["arduino"],
+  "name": "STM32G030K8T6",
+  "extra_flags": "-DSTM32G030xx -DSTM32G030K8T6 -DARDUINO_GENERIC_G0 -DHAL_INCLUDE",
+  "upload": {
+    "maximum_ram_size": 32768,
+    "maximum_size": 64000,
+    "protocol": "stlink",
+    "require_upload_port": false
+  },
+  "debug": {
+    "tools": {
+      "stlink": {
+        "server": {
+          "arguments": [
+            "-s",
+            "${platformio.packages_dir}/tool-openocd/scripts",
+            "-f",
+            "interface/stlink.cfg",
+            "-f",
+            "target/stm32g0x.cfg"
+          ]
+        }
+      }
+    }
+  },
+  "vendor": "ST",
+  "url": "https://www.st.com/en/microcontrollers-microprocessors/stm32g030k8.html"
+}
