@@ -16,6 +16,7 @@
             "projectEnvName": "stm32g030k8",
             "toolchainBinDir": "/home/andre/.platformio/packages/toolchain-gccarmnoneeabi/bin",
             "internalConsoleOptions": "openOnSessionStart",
+            "svdPath": "/home/andre/.platformio/platforms/ststm32/misc/svd/STM32G030.svd",
             "preLaunchTask": {
                 "type": "PlatformIO",
                 "task": "Pre-Debug"
@@ -28,7 +29,8 @@
             "executable": "/home/andre/dev/source/Cascade_STM32_Fireware/.pio/build/stm32g030k8/firmware.elf",
             "projectEnvName": "stm32g030k8",
             "toolchainBinDir": "/home/andre/.platformio/packages/toolchain-gccarmnoneeabi/bin",
-            "internalConsoleOptions": "openOnSessionStart"
+            "internalConsoleOptions": "openOnSessionStart",
+            "svdPath": "/home/andre/.platformio/platforms/ststm32/misc/svd/STM32G030.svd"
         },
         {
             "type": "platformio-debug",
@@ -38,6 +40,7 @@
             "projectEnvName": "stm32g030k8",
             "toolchainBinDir": "/home/andre/.platformio/packages/toolchain-gccarmnoneeabi/bin",
             "internalConsoleOptions": "openOnSessionStart",
+            "svdPath": "/home/andre/.platformio/platforms/ststm32/misc/svd/STM32G030.svd",
             "loadMode": "manual"
         }
     ]
