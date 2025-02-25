@@ -5,6 +5,7 @@
 #include <deviceRegistry/deviceRegistry.h>
 #include <drivers/gpioDriver.h>
 #include <drivers/servoDriver.h>
+#include <drivers/bme280Driver.h>
 
 void setup()
 {
@@ -18,6 +19,7 @@ void setup()
     registry.registerDevice(0x04, new GPIO<4>());
     registry.registerDevice(0x05, new SERVO<5>());
     registry.registerDevice(0x06, new SERVO<6>());
+    registry.registerDevice(0x07, new BME280_SPI<PA4>());
 }
 
 void loop()
