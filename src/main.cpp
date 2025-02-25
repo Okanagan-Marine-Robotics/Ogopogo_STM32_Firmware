@@ -14,9 +14,9 @@ void setup()
     Wire.onRequest(requestEvent);
 
     // Register devices
-    registry.registerDevice(0x02, new GPIO<2>());
-    registry.registerDevice(0x03, new GPIO<3>());
-    registry.registerDevice(0x04, new GPIO<4>());
+    registry.registerDevice(0x02, new GPIO<2>());                               // standard GPIO pin pull-up mode
+    registry.registerDevice(0x03, new GPIO<3, INPUT_PULLDOWN, false, false>()); // standard GPIO pin pull-down mode
+    registry.registerDevice(0x04, new GPIO<4, INPUT_PULLUP, true>());           // analog read
     registry.registerDevice(0x05, new SERVO<5>());
     registry.registerDevice(0x06, new SERVO<6>());
     registry.registerDevice(0x07, new BME280_SPI<PA4>());
