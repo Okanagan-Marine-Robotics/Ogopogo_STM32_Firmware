@@ -10,6 +10,7 @@
             "includePath": [
                 "/home/andre/dev/source/Cascade_STM32_Fireware/include",
                 "/home/andre/dev/source/Cascade_STM32_Fireware/src",
+                "/home/andre/.platformio/packages/framework-arduinoststm32/libraries/Wire/src",
                 "/home/andre/.platformio/packages/framework-arduinoststm32/cores/arduino/avr",
                 "/home/andre/.platformio/packages/framework-arduinoststm32/cores/arduino/stm32",
                 "/home/andre/.platformio/packages/framework-arduinoststm32/cores/arduino/stm32/LL",
@@ -44,7 +45,6 @@
                 "/home/andre/.platformio/packages/framework-arduinoststm32/libraries/SoftwareSerial/src",
                 "/home/andre/.platformio/packages/framework-arduinoststm32/libraries/SrcWrapper/src",
                 "/home/andre/.platformio/packages/framework-arduinoststm32/libraries/SubGhz/src",
-                "/home/andre/.platformio/packages/framework-arduinoststm32/libraries/Wire/src",
                 ""
             ],
             "browse": {
@@ -52,6 +52,7 @@
                 "path": [
                     "/home/andre/dev/source/Cascade_STM32_Fireware/include",
                     "/home/andre/dev/source/Cascade_STM32_Fireware/src",
+                    "/home/andre/.platformio/packages/framework-arduinoststm32/libraries/Wire/src",
                     "/home/andre/.platformio/packages/framework-arduinoststm32/cores/arduino/avr",
                     "/home/andre/.platformio/packages/framework-arduinoststm32/cores/arduino/stm32",
                     "/home/andre/.platformio/packages/framework-arduinoststm32/cores/arduino/stm32/LL",
@@ -86,7 +87,6 @@
                     "/home/andre/.platformio/packages/framework-arduinoststm32/libraries/SoftwareSerial/src",
                     "/home/andre/.platformio/packages/framework-arduinoststm32/libraries/SrcWrapper/src",
                     "/home/andre/.platformio/packages/framework-arduinoststm32/libraries/SubGhz/src",
-                    "/home/andre/.platformio/packages/framework-arduinoststm32/libraries/Wire/src",
                     ""
                 ]
             },
