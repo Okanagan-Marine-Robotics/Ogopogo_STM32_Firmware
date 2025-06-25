@@ -30,17 +30,24 @@
 #include "ws2812b.h"
 #include "color.h"
 #include <math.h>
-#include "bme280_spi_hal.h"
+#include "device_hal/devicefactory.h"
+#include "i2c_device_bus/i2c_device_bus.h"
+#include "stm32g0xx_hal_i2c.h"
+#include "stm32g0xx_hal_i2c_ex.h"
+#include "stm32g0xx_it.h"
+#include "devices/bme280_io.h"
+#include "configuration.h"
+#include "stm32g0xx.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+  BME280_Reading bme280_reading = {0};
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+// #define SYSCFG_CFGR1_EN_VREFINT (1U << 22)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -62,12 +69,14 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+/* Global buffers */
+
 /* USER CODE END 0 */
 
 /**
- * @brief  The application entry point.
- * @retval int
- */
+  * @brief  The application entry point.
+  * @retval int
+  */
 int main(void)
 {
 
@@ -99,78 +108,90 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
+  auto status = HAL_ADCEx_Calibration_Start(&hadc1);
 
-  // // Stop blinding me
-  // Set_LED(0, 0, 0, 0); // Set LED 0 to off
-  // WS2812_Send();
-  // while (1)
+
+  SetupDevices(); // Initialize devices based on configuration
+
+  // HAL_I2C_EnableListen_IT(&hi2c1);
+  // get the current sensor device
+  // Device *current_sensor_device = FindDeviceByName("current_sensor");
+
+  // just read from current sensor in a loop to test it
+  // while (true)
   // {
-
-  uint8_t tx[2] = {0xD0, 0x00}; // 0xD0 = ID register
-  uint8_t rx[2] = {0x00, 0x00}; // Return value
-
+  //   if (current_sensor_device)
+  //   {
+  //     float current_value = 0.0f;
+  //     current_sensor_device->read(current_sensor_device, &current_value);
+  //   } 
   // }
+  // get the bme280 device
+  Device *bme280_device = FindDeviceByName("bme280_sensor");
 
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
-  HAL_Delay(1); // Give it a small window to latch SCK
+  // configure ws2812b
 
-  // Initialize the BME280 sensor
-  BME280_Init();
+Set_LED(0, 0, 0, 0);
+// WS2812_Send();
 
-  // while (1)
-  // {
-  //   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);      // CS
-  //   HAL_SPI_TransmitReceive(&hspi1, tx, rx, 2, HAL_MAX_DELAY); // Send reg addr, receive dummy byte
-  //   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);        // CS LOW
-  //   HAL_Delay(1);                                              // Give it a small window to latch SCK
-  // }
+// Test 1: Just red
+Set_LED(0, 0, 0, 0);
+Set_LED(0, 25, 0, 0); 
+HAL_Delay(100);
 
-  // led_num, Blue, Red, Green
-  Set_LED(0, 255, 0, 0); // Set LED 0 to red
-  WS2812_Send();
 
-  HAL_Delay(1000);
+Set_LED(0, 0, 0, 0);
+Set_LED(0, 0, 25, 0);
+HAL_Delay(100);
 
-  Set_LED(0, 0, 255, 0); // Set LED 0 to green
-  WS2812_Send();
+// Test 3: Just blue
+Set_LED(0, 0, 0, 0);
+Set_LED(0, 0, 0, 25);
+HAL_Delay(100);
 
-  HAL_Delay(1000);
-
-  Set_LED(0, 0, 0, 255); // Set LED 0 to blue
-  WS2812_Send();
-  HAL_Delay(1000);
+  
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
-  float hue = 0;
-
+  uint32_t last_led_time = 0;
+  I2C_Slave_Init();
+  // Initialize I2C slave communication
   while (1)
   {
-    float temp, hum, press;
-    // Read BME280 sensor data
-    Read_BME280(&temp, &hum, &press);
+    I2C_Slave_PollingLoop(); // Poll for I2C commands
 
-    uint8_t r, g, b;
+    // create a place to store the reading from the bme280
+    // // read the bme280 sensor
+    // if (bme280_device)
+    // {
+    //   bme280_device->read(bme280_device, &bme280_reading);
+    // }
 
-    float mapped = 240.0f - (temp / 60.0f) * 240.0f;
-    if (mapped < 0)
-      mapped = 0;
-    if (mapped > 240)
-      mapped = 240;
+    // // Process the reading if valid
+    // float temp = bme280_reading.temperature;
+    // float humidity = bme280_reading.humidity;
+    // float pressure = bme280_reading.pressure;
+    // processI2C(); // Process any I2C commands received
 
-    HSV_to_RGB(mapped, 1.0f, (float)255 / 255.0f, &r, &g, &b);
-    Set_LED(0, r, g, b);
+    // flash the led between red and green every 1 second
+    // if (HAL_GetTick() - last_led_time >= 1000)
+    // {
+    //   last_led_time = HAL_GetTick();
+    //   static int led_state = 0; // 0 for red, 1 for green
+    //   if (led_state == 0)
+    //   {
+    //     Set_LED(0, 25, 0, 0); // Set first LED to Red
+    //   }
+    //   else
+    //   {
+    //     Set_LED(0, 0, 25, 0); // Set first LED to Green
+    //   }
+    //   WS2812_Send(); // Send the data to the WS2812B LEDs
+    //   led_state = !led_state; // Toggle state
+    // }
 
-    WS2812_Send();
-    // HAL_Delay(20);
 
-    // hue += 2; // Adjust for speed
-    // if (hue >= 360.0f)
-    //   hue -= 360.0f;
-
-    // Read BME280 sensor data
 
     /* USER CODE END WHILE */
 
@@ -180,21 +201,21 @@ int main(void)
 }
 
 /**
- * @brief System Clock Configuration
- * @retval None
- */
+  * @brief System Clock Configuration
+  * @retval None
+  */
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   /** Configure the main internal regulator output voltage
-   */
+  */
   HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1);
 
   /** Initializes the RCC Oscillators according to the specified parameters
-   * in the RCC_OscInitTypeDef structure.
-   */
+  * in the RCC_OscInitTypeDef structure.
+  */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;
@@ -211,8 +232,9 @@ void SystemClock_Config(void)
   }
 
   /** Initializes the CPU, AHB and APB buses clocks
-   */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1;
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
@@ -225,12 +247,14 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
+
+
 /* USER CODE END 4 */
 
 /**
- * @brief  This function is executed in case of error occurrence.
- * @retval None
- */
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
@@ -242,14 +266,14 @@ void Error_Handler(void)
   /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef USE_FULL_ASSERT
+#ifdef  USE_FULL_ASSERT
 /**
- * @brief  Reports the name of the source file and the source line number
- *         where the assert_param error has occurred.
- * @param  file: pointer to the source file name
- * @param  line: assert_param error line source number
- * @retval None
- */
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */

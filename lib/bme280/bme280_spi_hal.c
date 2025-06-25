@@ -100,15 +100,6 @@ void BME280_Init()
             /* code */
         }
     }
-
-    // Configure sensor
-    // bme.settings.osr_h = BME280_OVERSAMPLING_1X;
-    // bme.settings.osr_p = BME280_OVERSAMPLING_1X;
-    // bme.settings.osr_t = BME280_OVERSAMPLING_1X;
-    // bme.settings.filter = BME280_FILTER_COEFF_OFF;
-
-    // rslt = bme280_set_sensor_settings(BME280_SEL_ALL_SETTINGS, &bme);
-    // rslt = bme280_set_sensor_mode(BME280_POWERMODE_FORCED, &bme);
 }
 
 void Read_BME280(float *temp, float *hum, float *press)

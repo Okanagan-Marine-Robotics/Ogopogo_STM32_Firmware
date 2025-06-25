@@ -10,8 +10,8 @@
             "includePath": [
                 "/home/andre/dev/source/Cascade_STM32_Fireware/Inc",
                 "/home/andre/dev/source/Cascade_STM32_Fireware/Src",
-                "/home/andre/dev/source/Cascade_STM32_Fireware/lib/ws2812b",
                 "/home/andre/dev/source/Cascade_STM32_Fireware/lib/bme280",
+                "/home/andre/dev/source/Cascade_STM32_Fireware/lib/ws2812b",
                 "/home/andre/.platformio/packages/framework-stm32cubeg0/Drivers/CMSIS/Include",
                 "/home/andre/.platformio/packages/framework-stm32cubeg0/Drivers/CMSIS/Device/ST/STM32G0xx/Include",
                 "/home/andre/.platformio/packages/framework-stm32cubeg0/Drivers/STM32G0xx_HAL_Driver/Inc",
@@ -75,8 +75,8 @@
                 "path": [
                     "/home/andre/dev/source/Cascade_STM32_Fireware/Inc",
                     "/home/andre/dev/source/Cascade_STM32_Fireware/Src",
-                    "/home/andre/dev/source/Cascade_STM32_Fireware/lib/ws2812b",
                     "/home/andre/dev/source/Cascade_STM32_Fireware/lib/bme280",
+                    "/home/andre/dev/source/Cascade_STM32_Fireware/lib/ws2812b",
                     "/home/andre/.platformio/packages/framework-stm32cubeg0/Drivers/CMSIS/Include",
                     "/home/andre/.platformio/packages/framework-stm32cubeg0/Drivers/CMSIS/Device/ST/STM32G0xx/Include",
                     "/home/andre/.platformio/packages/framework-stm32cubeg0/Drivers/STM32G0xx_HAL_Driver/Inc",
