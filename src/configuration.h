@@ -5,7 +5,7 @@
 /***************************
  * I2C SLAVE CONFIGURATION *
  ***************************/
-#define I2C_SLAVE_ADDRESS 0x42
+#define I2C_SLAVE_ADDRESS 0x43
 #define I2C_TX_BUFFER_SIZE 32 // don't change this value if you don't know what you're doing
 
 /************************
@@ -25,9 +25,9 @@
 /**********************
  * GPIO CONFIGURATION *
  **********************/
-#define NUM_OUTPUT_PINS 8
-#define OUTPUT_PINS {PB3, PB4, PB5, PB6, PB7, PB8, PA11, PA12}
-#define NUM_INPUT_PINS 0
+#define NUM_DIGITAL_OUTPUT_PINS 8
+#define DIGITAL_OUTPUT_PINS {PB3, PB4, PB5, PB6, PB7, PB8, PA11, PA12}
+#define NUM_DIGITAL_INPUT_PINS 0
 #define INPUT_DIGITAL_PINS {}
 // Analog Input Configuration
 #define NUM_ANALOG_INPUT_PINS 2

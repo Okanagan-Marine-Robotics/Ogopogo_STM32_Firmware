@@ -3,13 +3,16 @@
 #include <Wire.h>
 #include <Adafruit_BME280.h>
 
-const uint8_t outputPinsArray[] = OUTPUT_PINS;
+const uint8_t outputPinsArray[] = DIGITAL_OUTPUT_PINS;
 const uint8_t inputAnalogArray[] = INPUT_ANALOG_PINS;
 
 // Global variables for BME280 data
 extern float hum;
 extern float temp;
 extern float press;
+
+// external array for analog values
+extern uint16_t analogValues[NUM_ANALOG_INPUT_PINS];
 
 // Global variables for LED control
 extern uint8_t ledColor[3]; // RGB values for each LED
@@ -59,7 +62,7 @@ void I2CHandler::receiveEvent(int numBytes)
                 }
 
                 // Check if pinIndex is within bounds
-                if (pinIndex < NUM_OUTPUT_PINS)
+                if (pinIndex < NUM_DIGITAL_OUTPUT_PINS)
                 {
                     // Write the value to the specified pin
                     digitalWrite(outputPinsArray[pinIndex], value ? HIGH : LOW);
@@ -88,7 +91,7 @@ void I2CHandler::receiveEvent(int numBytes)
                 uint8_t pinIndex = Wire.read();
 
                 // Validate pin index
-                if (pinIndex < NUM_OUTPUT_PINS)
+                if (pinIndex < NUM_DIGITAL_INPUT_PINS)
                 {
                     // Read the value from the specified pin
                     uint8_t value = digitalRead(outputPinsArray[pinIndex]);
@@ -122,9 +125,8 @@ void I2CHandler::receiveEvent(int numBytes)
                 {
 // Read the analog value from the specified pin
 #if NUM_ANALOG_INPUT_PINS > 0
-                    int analogValue = analogRead(inputAnalogArray[pinIndex]);
-                    lastResponseCode[0] = (analogValue >> 8) & 0xFF; // High byte
-                    lastResponseCode[1] = analogValue & 0xFF;        // Low byte
+                    lastResponseCode[0] = (analogValues[pinIndex] >> 8) & 0xFF; // High byte
+                    lastResponseCode[1] = analogValues[pinIndex] & 0xFF;        // Low byte
 #else
                     {
                         // Handle error: no analog pins defined
