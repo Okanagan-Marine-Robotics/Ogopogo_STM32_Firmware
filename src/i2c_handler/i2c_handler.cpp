@@ -184,6 +184,32 @@ void I2CHandler::receiveEvent(int numBytes)
                 lastResponseCode[0] = 0xFF; // Error code
             }
             break;
+        case I2C_DISCOVER_DEVICES:
+            // Check if the expected number of bytes is correct
+            txBytes = 1; // 1 byte for response code
+            if (numBytes == I2C_DISCOVER_DEVICES_EXPECTED_BITS)
+            {
+                // respond with the different devices and how many there are
+                // we will do 0x01 for GPIO, 0x02 for Analog, 0x03 for BME280, and 0x04 for LED
+                // then after the address we will send the number of devices
+                lastResponseCode[0] = 0x01;                    // GPIO output device
+                lastResponseCode[1] = NUM_DIGITAL_OUTPUT_PINS; // Number of GPIO output pins
+                lastResponseCode[2] = 0x02;                    // GPIO input device
+                lastResponseCode[3] = NUM_DIGITAL_INPUT_PINS;  // Number of GPIO input pins
+                lastResponseCode[4] = 0x03;                    // Analog input device
+                lastResponseCode[5] = NUM_ANALOG_INPUT_PINS;   // Number of Analog input pins
+                lastResponseCode[6] = 0x04;                    // BME280 device
+                lastResponseCode[7] = 0x01;                    // Number of BME280 devices
+                lastResponseCode[8] = 0x05;                    // LED device
+                lastResponseCode[9] = LED_COUNT;               // Number of LEDs
+                txBytes = 10;                                  // Total bytes sent in response
+            }
+            else
+            {
+                // Handle error: unexpected number of bytes
+                lastResponseCode[0] = 0xFF; // Error code
+            }
+            break;
         default:
             // Handle unknown command
             lastResponseCode[0] = 0xFF; // Error code
