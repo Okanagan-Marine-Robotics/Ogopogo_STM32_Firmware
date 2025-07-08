@@ -11,7 +11,7 @@
 #define I2C_READ_BME280 0x04
 #define I2C_READ_BME280_EXPECTED_BITS 0x01 // 0x04 command
 #define I2C_WRITE_LED 0x05
-#define I2C_WRITE_LED_EXPECTED_BITS 0x04 // 0x05, red byte, green byte, blue byte
+#define I2C_WRITE_LED_EXPECTED_BITS 0x05 // 0x05, comand byte, index, red byte, green byte, blue byte
 
 #define I2C_DISCOVER_DEVICES 0xD1               // 0xD1 "D1scover" the devices connected to the sensor board
 #define I2C_DISCOVER_DEVICES_EXPECTED_BITS 0x01 // 0xD1 command

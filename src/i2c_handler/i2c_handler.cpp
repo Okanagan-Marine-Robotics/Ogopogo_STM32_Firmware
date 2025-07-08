@@ -15,7 +15,7 @@ extern float press;
 extern uint16_t analogValues[NUM_ANALOG_INPUT_PINS];
 
 // Global variables for LED control
-extern uint8_t ledColor[3]; // RGB values for each LED
+extern uint8_t ledColor[LED_COUNT][3]; // RGB values for each LED
 
 void I2CHandler::initializeI2C()
 {
@@ -172,9 +172,17 @@ void I2CHandler::receiveEvent(int numBytes)
             {
                 // Read RGB values
                 // update the LED color
-                ledColor[0] = Wire.read(); // Red
-                ledColor[1] = Wire.read(); // Green
-                ledColor[2] = Wire.read(); // Blue
+                // get index
+                uint8_t ledIndex = Wire.read(); // Read the LED index
+                if (ledIndex >= LED_COUNT)
+                {
+                    // Handle error: LED index out of bounds
+                    lastResponseCode[0] = 0xFF; // Error code
+                    break;
+                }
+                ledColor[ledIndex][0] = Wire.read(); // Red byte
+                ledColor[ledIndex][1] = Wire.read(); // Green byte
+                ledColor[ledIndex][2] = Wire.read(); // Blue byte
 
                 lastResponseCode[0] = 0x00; // Success code
             }
@@ -192,17 +200,12 @@ void I2CHandler::receiveEvent(int numBytes)
                 // respond with the different devices and how many there are
                 // we will do 0x01 for GPIO, 0x02 for Analog, 0x03 for BME280, and 0x04 for LED
                 // then after the address we will send the number of devices
-                lastResponseCode[0] = 0x01;                    // GPIO output device
-                lastResponseCode[1] = NUM_DIGITAL_OUTPUT_PINS; // Number of GPIO output pins
-                lastResponseCode[2] = 0x02;                    // GPIO input device
-                lastResponseCode[3] = NUM_DIGITAL_INPUT_PINS;  // Number of GPIO input pins
-                lastResponseCode[4] = 0x03;                    // Analog input device
-                lastResponseCode[5] = NUM_ANALOG_INPUT_PINS;   // Number of Analog input pins
-                lastResponseCode[6] = 0x04;                    // BME280 device
-                lastResponseCode[7] = 0x01;                    // Number of BME280 devices
-                lastResponseCode[8] = 0x05;                    // LED device
-                lastResponseCode[9] = LED_COUNT;               // Number of LEDs
-                txBytes = 10;                                  // Total bytes sent in response
+                lastResponseCode[0] = NUM_DIGITAL_OUTPUT_PINS; // Number of GPIO output pins
+                lastResponseCode[1] = NUM_DIGITAL_INPUT_PINS;  // Number of GPIO input pins
+                lastResponseCode[2] = NUM_ANALOG_INPUT_PINS;   // Number of Analog input pins
+                lastResponseCode[3] = 1;                       // BME280 device present (always 1)
+                lastResponseCode[4] = LED_COUNT;               // Number of LEDs
+                txBytes = 5;                                   // Total bytes sent in response
             }
             else
             {

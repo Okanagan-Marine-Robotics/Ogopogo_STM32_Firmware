@@ -65,7 +65,7 @@ volatile float hum;
 volatile float temp;
 volatile float press;
 
-volatile uint8_t ledColor[3] = {0, 0, 0};                                   // RGB values for the LED
+volatile uint8_t ledColor[LED_COUNT][3] = {};                               // RGB values for the LED
 volatile uint16_t analogValues[NUM_ANALOG_INPUT_PINS] = {0};                // Array to hold analog values
 const uint8_t input_analog_pins[NUM_ANALOG_INPUT_PINS] = INPUT_ANALOG_PINS; // Analog input pins
 
@@ -82,6 +82,12 @@ void loop()
     }
 #endif
 
-    led.setPixelColor(0, led.Color(ledColor[0], ledColor[1], ledColor[2]));
+#if LED_COUNT > 0
+    for (uint8_t i = 0; i < LED_COUNT; i++)
+    {
+        // Set the LED color based on the ledColor array
+        led.setPixelColor(i, led.Color(ledColor[i][0], ledColor[i][1], ledColor[i][2]));
+    }
     led.show();
+#endif
 }
