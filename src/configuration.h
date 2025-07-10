@@ -5,7 +5,7 @@
 /***************************
  * I2C SLAVE CONFIGURATION *
  ***************************/
-#define I2C_SLAVE_ADDRESS 0x43
+#define I2C_SLAVE_ADDRESS 0x45
 #define I2C_TX_BUFFER_SIZE 32 // don't change this value if you don't know what you're doing
 
 /************************
